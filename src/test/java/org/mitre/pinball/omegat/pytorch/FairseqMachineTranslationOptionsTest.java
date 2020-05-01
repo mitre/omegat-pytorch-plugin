@@ -1,7 +1,5 @@
 package org.mitre.pinball.omegat.pytorch;
 
-import org.mitre.pinball.omegat.pytorch.PyTorchMachineTranslationOptions;
-
 import org.testng.annotations.Test;
 import static org.testng.Assert.*;
 
@@ -9,17 +7,17 @@ import java.io.File;
 import java.io.IOException;
 import java.nio.file.Files;
 
-public class PyTorchMachineTranslationOptionsTest {
+public class FairseqMachineTranslationOptionsTest {
     @Test
     void testModelDirectoryIsDirectory() throws IOException {
         File dir = Files.createTempDirectory("tmp-").toFile();
         dir.deleteOnExit();
 
-        PyTorchMachineTranslationOptions options =
-                new PyTorchMachineTranslationOptions().setModelDirectory(dir);
+        FairseqMachineTranslationOptions options =
+                new FairseqMachineTranslationOptions().setModelFile(dir);
 
         // Assert the temporary directory is equal to the directory assigned
-        assertEquals(options.getModelDirectory(), dir);
+        assertEquals(options.getModelFile(), dir);
     }
 
     @Test
@@ -28,7 +26,7 @@ public class PyTorchMachineTranslationOptionsTest {
         File file = File.createTempFile("hello", ".tmp");
         file.deleteOnExit();
 
-        assertThrows(() -> new PyTorchMachineTranslationOptions().setModelDirectory(file));
+        assertThrows(() -> new FairseqMachineTranslationOptions().setModelFile(file));
     }
 
     @Test
@@ -40,6 +38,6 @@ public class PyTorchMachineTranslationOptionsTest {
         boolean deleted = dir.delete();
         assertTrue(deleted);
 
-        assertThrows(() -> new PyTorchMachineTranslationOptions().setModelDirectory(dir));
+        assertThrows(() -> new FairseqMachineTranslationOptions().setModelFile(dir));
     }
 }

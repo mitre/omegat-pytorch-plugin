@@ -1,6 +1,7 @@
 package org.mitre.pinball.omegat.pytorch;
 
-import org.mitre.pinball.omegat.pytorch.dialog.PyTorchTranslationOptionDialog;
+import org.mitre.pinball.omegat.pytorch.dialog.FairseqTranslationOptionDialog;
+import org.mitre.pinball.omegat.pytorch.translator.FairseqTranslator;
 import org.omegat.core.Core;
 import org.omegat.core.machinetranslators.BaseTranslate;
 import org.omegat.gui.exttrans.IMachineTranslation;
@@ -13,16 +14,20 @@ import java.io.File;
 import java.nio.file.Paths;
 import org.omegat.util.Preferences;
 
-public class PyTorchMachineTranslation extends BaseTranslate implements IMachineTranslation {
+
+public class FairseqMachineTranslation extends BaseTranslate implements IMachineTranslation {
 
     private static final Logger LOGGER = LoggerFactory
-            .getLogger(PyTorchMachineTranslation.class);
+            .getLogger(FairseqMachineTranslation.class);
 
     protected boolean enabled;
-    protected PyTorchMachineTranslationOptions options;
+    protected FairseqMachineTranslationOptions options;
 
-    public PyTorchMachineTranslation() {
+    private FairseqTranslator translator;
+
+    public FairseqMachineTranslation() {
         super();
+        translator = null;
         boolean created = DEFAULT_MODEL_DIRECTORY.mkdirs();
         if (created) {
             LOGGER.debug("Default model directory " + DEFAULT_MODEL_DIRECTORY.toString() + " created");
@@ -40,8 +45,8 @@ public class PyTorchMachineTranslation extends BaseTranslate implements IMachine
      * Register plugin into OmegaT.
      */
     public static void loadPlugins() {
-        LOGGER.debug("Registering machine translation class " + PyTorchMachineTranslation.class.toString());
-        Core.registerMachineTranslationClass(PyTorchMachineTranslation.class);
+        LOGGER.debug("Registering machine translation class " + FairseqMachineTranslation.class.toString());
+        Core.registerMachineTranslationClass(FairseqMachineTranslation.class);
     }
 
     /**
@@ -54,18 +59,17 @@ public class PyTorchMachineTranslation extends BaseTranslate implements IMachine
     /**
      * Preparation for OmegaT Menu.
      */
-    private static final String OPTION_ALLOW_PYTORCH_TRANSLATE = "allow_pytorch_translate";
+    private static final String OPTION_ALLOW_PYTORCH_TRANSLATE = "allow_fairseq_translate";
     private static final String OPTION_MODEL_DIRECTORY = "model_directory";
 
-    private static File DEFAULT_MODEL_DIRECTORY = Paths.get(
+    public static File DEFAULT_MODEL_DIRECTORY = Paths.get(
             System.getProperty("user.home"),
             ".models",
-            "pytorch"
+            "fairseq"
             ).toFile();
 
     private void initOptions() {
-        options = new PyTorchMachineTranslationOptions()
-             .setModelDirectory(DEFAULT_MODEL_DIRECTORY);
+        options = new FairseqMachineTranslationOptions();
     }
 
     @Override
@@ -76,14 +80,15 @@ public class PyTorchMachineTranslation extends BaseTranslate implements IMachine
 
     @Override
     public void showConfigurationUI(final Window parent) {
-        PyTorchTranslationOptionDialog dialog = new PyTorchTranslationOptionDialog(parent);
+        FairseqTranslationOptionDialog dialog = new FairseqTranslationOptionDialog(parent);
         dialog.pack();
         dialog.setData(options);
         dialog.setVisible(true);
         if (dialog.isModified(options)) {
             dialog.getData(options);
         }
-        setCredential(OPTION_MODEL_DIRECTORY, options.getModelDirectory().toString(), false);
+
+        setCredential(OPTION_MODEL_DIRECTORY, options.getModelFile().toString(), false);
         Preferences.save();
     }
 
@@ -94,12 +99,21 @@ public class PyTorchMachineTranslation extends BaseTranslate implements IMachine
 
     @Override
     public String getName() {
-        return "PyTorch local translation";
+        return "Fairseq local translation";
     }
 
     @Override
     protected String translate(Language sLang, Language tLang, String text) throws Exception {
-        return null;
+        if (translator == null) {
+            translator = FairseqTranslator.fromWhitespaceTokenizerFastBPE(
+                    options.getSourceDictFile(),
+                    options.getTargetDictFile(),
+                    options.getModelFile(),
+                    options.getBpeCodesFile()
+            );
+        }
+
+        return translator.translate(text);
     }
 
     /**

@@ -12,6 +12,8 @@ repositories {
     maven { url "https://dl.bintray.com/omegat-org/maven/" }
     maven { url "https://repo.spring.io/plugins-release/" }
     maven { url 'https://oss.sonatype.org/content/repositories/snapshots' }
+    mavenCentral()
+    mavenLocal()
 }
 
 group 'com.example'
@@ -23,10 +25,6 @@ ext {
 
 sourceCompatibility = 1.8
 
-repositories {
-    mavenCentral()
-}
-
 dependencies {
     compile 'oauth.signpost:signpost-core:1.2.1.2'
     compile 'oauth.signpost:signpost-commonshttp4:1.2.1.2'
@@ -35,16 +33,18 @@ dependencies {
     compile group: 'com.intellij', name: 'forms_rt', version: '7.0.3'
     compile fileTree(dir: 'lib', include: '*.jar')
     compile 'org.slf4j:slf4j-api:1.7.25'
+    compile 'org.mitre:jfastbpe:1.0-SNAPSHOT'
     compileOnly 'org.omegat:omegat:4.3.0'
     compileOnly 'commons-io:commons-io:2.5'
     compileOnly 'commons-lang:commons-lang:2.6'
+    compile group: 'org.apache.opennlp', name: 'opennlp-tools', version: '1.9.2'
     testImplementation 'org.omegat:omegat:4.3.0'
     testImplementation 'commons-io:commons-io:2.4'
     testImplementation 'commons-lang:commons-lang:2.6'
     testImplementation "org.codehaus.groovy:groovy-all:3.0.1"
     testImplementation 'org.testng:testng:6.9.10'
     spotbugsPlugins 'com.h3xstream.findsecbugs:findsecbugs-plugin:1.7.1'
-    implementation 'org.pytorch:pytorch_java_only:1.4.0'
+    compile 'org.mitre:jfairseq:1.0-SNAPSHOT'
 }
 
 test.useTestNG()
@@ -54,7 +54,7 @@ jar {
         configurations.compile.collect { it.isDirectory() ? it : zipTree(it) }
     }
     manifest {
-        attributes("OmegaT-Plugins": "org.mitre.pinball.omegat.pytorch.PyTorchMachineTranslation")
+        attributes("OmegaT-Plugins": "org.mitre.pinball.omegat.pytorch.FairseqMachineTranslation")
     }
 }
 
@@ -63,7 +63,7 @@ tasks.withType(JavaCompile) {
 }
 
 tasks.withType(Checkstyle) {
-    exclude('**/dialog/PyTorchTranslationOptionDialog.java')
+    exclude('**/dialog/FairseqTranslationOptionDialog.java')
 }
 
 spotless {
