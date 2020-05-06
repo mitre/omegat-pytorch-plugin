@@ -11,7 +11,11 @@ import org.slf4j.LoggerFactory;
 
 import java.awt.*;
 import java.io.File;
+import java.io.IOException;
 import java.nio.file.Paths;
+import java.util.Timer;
+import java.util.concurrent.CompletableFuture;
+
 import org.omegat.util.Preferences;
 
 
@@ -22,12 +26,15 @@ public class FairseqMachineTranslation extends BaseTranslate implements IMachine
 
     protected boolean enabled;
     protected FairseqMachineTranslationOptions options;
+    private CompletableFuture<FairseqTranslator> setup;
 
     private FairseqTranslator translator;
 
     public FairseqMachineTranslation() {
         super();
         translator = null;
+        setup = new CompletableFuture<>();
+
         boolean created = DEFAULT_MODEL_DIRECTORY.mkdirs();
         if (created) {
             LOGGER.debug("Default model directory " + DEFAULT_MODEL_DIRECTORY.toString() + " created");
@@ -60,7 +67,10 @@ public class FairseqMachineTranslation extends BaseTranslate implements IMachine
      * Preparation for OmegaT Menu.
      */
     private static final String OPTION_ALLOW_PYTORCH_TRANSLATE = "allow_fairseq_translate";
-    private static final String OPTION_MODEL_DIRECTORY = "model_directory";
+    private static final String OPTION_MODEL_FILE = "model_file";
+    private static final String OPTION_BPE_FILE = "bpecodes_file";
+    private static final String OPTION_SRC_DICT_FILE = "src_dict_file";
+    private static final String OPTION_TGT_DICT_FILE = "tgt_dict_file";
 
     public static File DEFAULT_MODEL_DIRECTORY = Paths.get(
             System.getProperty("user.home"),
@@ -88,8 +98,31 @@ public class FairseqMachineTranslation extends BaseTranslate implements IMachine
             dialog.getData(options);
         }
 
-        setCredential(OPTION_MODEL_DIRECTORY, options.getModelFile().toString(), false);
+        setCredential(OPTION_MODEL_FILE, options.getModelFile().toString(), false);
+        setCredential(OPTION_BPE_FILE, options.getBpeCodesFile().toString(), false);
+        setCredential(OPTION_SRC_DICT_FILE, options.getSourceDictFile().toString(), false);
+        setCredential(OPTION_TGT_DICT_FILE, options.getTargetDictFile().toString(), false);
         Preferences.save();
+
+        setup = CompletableFuture.supplyAsync(() -> {
+                Timer t = new Timer();
+                FairseqTranslator translator = null;
+                LOGGER.info("Need to construct a fairseq translator... Starting now.");
+                long t0 = System.currentTimeMillis();
+                try {
+                    translator = FairseqTranslator.fromWhitespaceTokenizerFastBPE(
+                            new File(getCredential(OPTION_SRC_DICT_FILE)),
+                            new File(getCredential(OPTION_TGT_DICT_FILE)),
+                            new File(getCredential(OPTION_MODEL_FILE)),
+                            new File(getCredential(OPTION_BPE_FILE))
+                    );
+                } catch (IOException e) {
+                    LOGGER.info(e.toString());
+                }
+                LOGGER.info("Finish constructing. Took " + (System.currentTimeMillis() - t0) / 1000 + " seconds.");
+                return translator;
+        });
+
     }
 
     @Override
@@ -104,13 +137,9 @@ public class FairseqMachineTranslation extends BaseTranslate implements IMachine
 
     @Override
     protected String translate(Language sLang, Language tLang, String text) throws Exception {
+        LOGGER.info("Trying to translate '" + text + "'.");
         if (translator == null) {
-            translator = FairseqTranslator.fromWhitespaceTokenizerFastBPE(
-                    options.getSourceDictFile(),
-                    options.getTargetDictFile(),
-                    options.getModelFile(),
-                    options.getBpeCodesFile()
-            );
+            translator = setup.get();
         }
 
         return translator.translate(text);
