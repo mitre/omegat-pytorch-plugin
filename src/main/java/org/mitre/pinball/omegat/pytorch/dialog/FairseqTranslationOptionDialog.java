@@ -109,8 +109,6 @@ public class FairseqTranslationOptionDialog extends JDialog {
             return false;
         }
 
-        System.err.println("Is modified!");
-
         if (modelFile != null && bpeCodesFile != null && sourceDictFile != null && targetDictFile != null) {
             return !modelFile.equals(options.getModelFile()) &&
                     !bpeCodesFile.equals(options.getBpeCodesFile()) &&
@@ -174,7 +172,7 @@ public class FairseqTranslationOptionDialog extends JDialog {
         final Spacer spacer6 = new Spacer();
         contentPane.add(spacer6, new GridConstraints(10, 4, 1, 1, GridConstraints.ANCHOR_CENTER, GridConstraints.FILL_HORIZONTAL, GridConstraints.SIZEPOLICY_WANT_GROW, 1, null, null, null, 0, false));
         selectModelFileButton = new JButton();
-        selectModelFileButton.setText("Select Model Dictionary File");
+        selectModelFileButton.setText("Select Model File");
         contentPane.add(selectModelFileButton, new GridConstraints(1, 1, 1, 1, GridConstraints.ANCHOR_CENTER, GridConstraints.FILL_HORIZONTAL, GridConstraints.SIZEPOLICY_CAN_SHRINK | GridConstraints.SIZEPOLICY_CAN_GROW, GridConstraints.SIZEPOLICY_FIXED, null, null, null, 0, false));
         final Spacer spacer7 = new Spacer();
         contentPane.add(spacer7, new GridConstraints(0, 1, 1, 1, GridConstraints.ANCHOR_CENTER, GridConstraints.FILL_VERTICAL, 1, GridConstraints.SIZEPOLICY_WANT_GROW, null, null, null, 0, false));
