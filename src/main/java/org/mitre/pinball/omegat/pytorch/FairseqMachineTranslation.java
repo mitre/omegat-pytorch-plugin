@@ -13,7 +13,6 @@ import java.awt.*;
 import java.io.File;
 import java.io.IOException;
 import java.nio.file.Paths;
-import java.util.Timer;
 import java.util.concurrent.CompletableFuture;
 
 import org.omegat.util.Preferences;
@@ -105,12 +104,11 @@ public class FairseqMachineTranslation extends BaseTranslate implements IMachine
         Preferences.save();
 
         setup = CompletableFuture.supplyAsync(() -> {
-                Timer t = new Timer();
                 FairseqTranslator translator = null;
                 LOGGER.info("Need to construct a fairseq translator... Starting now.");
                 long t0 = System.currentTimeMillis();
                 try {
-                    translator = FairseqTranslator.fromWhitespaceTokenizerFastBPE(
+                    translator = FairseqTranslator.fromWhitespaceTokenizerSentencepiece(
                             new File(getCredential(OPTION_SRC_DICT_FILE)),
                             new File(getCredential(OPTION_TGT_DICT_FILE)),
                             new File(getCredential(OPTION_MODEL_FILE)),

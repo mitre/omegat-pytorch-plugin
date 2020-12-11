@@ -2,6 +2,7 @@ package org.mitre.pinball.omegat.pytorch.translator;
 
 import org.mitre.jfairseq.encoder.Encoder;
 import org.mitre.jfairseq.encoder.FastBPEEncoder;
+import org.mitre.jfairseq.encoder.SentencepieceEncoder;
 import org.mitre.jfairseq.tokenizer.Tokenizer;
 import org.mitre.jfairseq.tokenizer.WhitespaceTokenizer;
 
@@ -21,6 +22,11 @@ public class FairseqTranslator implements PyTorchTranslator {
     public static FairseqTranslator fromWhitespaceTokenizerFastBPE(final File sourceVocab, final File targetVocab, final File modelFile,
                              final File bpeCodes) throws IOException {
         return new FairseqTranslator(sourceVocab, targetVocab, modelFile, new FastBPEEncoder(bpeCodes), new WhitespaceTokenizer());
+    }
+
+    public static FairseqTranslator fromWhitespaceTokenizerSentencepiece(final File sourceVocab, final File targetVocab, final File modelFile,
+                                                                   final File spmModel) throws IOException {
+        return new FairseqTranslator(sourceVocab, targetVocab, modelFile, new SentencepieceEncoder(spmModel), new WhitespaceTokenizer());
     }
 
     @Override
