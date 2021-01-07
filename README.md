@@ -2,7 +2,7 @@
 
 ## Motivation
 
-TODO. :-)
+This repo serves to enable translators using OmegaT to add plugin support for TorchScript models. Currently it supports scripted fairseq models by way [jFairseq](https://github.com/mitre/jfairseq).
 
 ## Build
 
