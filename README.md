@@ -6,7 +6,7 @@ This repo serves to enable translators using OmegaT to add plugin support for To
 
 ## Build
 
-The plugin can be built using `./gradlew jar`. Once this is done, the resulting artifact `./build/libs/omegat-pytorch-plugin-1.0-SNAPSHOT.jar` will need to be moved to the OmegaT plugins directory.
+The plugin can be built using `sbt clean compile assembly`. Once this is done, the resulting artifact `./build/libs/omegat-pytorch-plugin-1.0-SNAPSHOT.jar` will need to be moved to the OmegaT plugins directory.
 
 ## Running OmegaT with the plugin
 
@@ -24,7 +24,7 @@ Currently Windows support is only ensured for PyTorch 1.7.1 nightlies as of 2 De
 
 ## Test
 
-Tests can be run by issuing `./gradlew test`.
+Tests can be run by issuing `sbt test`.
 
 ## Authors
 
