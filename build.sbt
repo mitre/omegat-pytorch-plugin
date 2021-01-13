@@ -7,8 +7,6 @@ resolvers += Resolver.mavenLocal
 resolvers += Resolver.jcenterRepo
 resolvers += "OmegaT Maven" at "https://dl.bintray.com/omegat-org/maven/"
 
-val CompileTime = config("compileonly").hide 
-
 lazy val root = (project in file("."))
   .enablePlugins(OsDetectorPlugin)
   .enablePlugins(AssemblyPlugin)
@@ -16,7 +14,6 @@ lazy val root = (project in file("."))
     name := "omegat-torchscript-plugin",
     crossPaths := false,
     autoScalaLibrary := false,
-    unmanagedClasspath in Compile ++= update.value.select(configurationFilter(CompileTime.name)),
     Compile / packageBin / artifact := {
         val prev = (Compile / packageBin / artifact).value
         prev.withClassifier(Some(osDetectorClassifier.value))
@@ -25,7 +22,6 @@ lazy val root = (project in file("."))
         s"${name.value}-${version.value}-${osDetectorClassifier.value}.jar"
     },
     publishMavenStyle := true,
-    ivyConfigurations += CompileTime,
     packageOptions in assembly := Seq(ManifestAttributes(("OmegaT-Plugins", "org.mitre.pinball.omegat.pytorch.FairseqMachineTranslation"))),
     libraryDependencies ++= Seq(
       "org.mitre" % "jfairseq" % "1.0-SNAPSHOT" classifier osDetectorClassifier.value,
