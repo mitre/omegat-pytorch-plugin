@@ -32,7 +32,6 @@ lazy val root = (project in file("."))
       "junit" % "junit" % "4.12" % Test,
       "org.pytorch" % "pytorch_java_only" % "1.5.0",
       "org.mitre" % "jfastbpe" % "1.0-SNAPSHOT",
-      "org.testng" % "testng" % "6.9.10" % Test,
       "oauth.signpost" % "signpost-core" % "1.2.1.2",
       "oauth.signpost" % "signpost-commonshttp4" % "1.2.1.2",
       "org.apache.httpcomponents" % "httpclient" % "4.5",
@@ -42,7 +41,8 @@ lazy val root = (project in file("."))
       "org.omegat" % "omegat" % "4.3.0" % "provided",
       "commons-io" % "commons-io" % "2.5" % "provided",
       "commons-lang" % "commons-lang" % "2.6" % "provided",
-      "org.apache.opennlp" % "opennlp-tools" % "1.9.2"       
+      "org.apache.opennlp" % "opennlp-tools" % "1.9.2",
+      "org.scalatest" %% "scalatest" % "3.2.2" % "test"
     )
   )
  
