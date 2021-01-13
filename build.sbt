@@ -21,14 +21,12 @@ lazy val root = (project in file("."))
         val prev = (Compile / packageBin / artifact).value
         prev.withClassifier(Some(osDetectorClassifier.value))
     },
+    assemblyJarName in assembly := {
+        s"${name.value}-${version.value}-${osDetectorClassifier.value}.jar"
+    },
     publishMavenStyle := true,
     ivyConfigurations += CompileTime,
     packageOptions in assembly := Seq(ManifestAttributes(("OmegaT-Plugins", "org.mitre.pinball.omegat.pytorch.FairseqMachineTranslation"))),
-    /*
-    assemblyMergeStrategy in assembly := {
-        case PathList("META-INF", xs @ _*) => MergeStrategy.discard
-        case x => MergeStrategy.first
-    },*/
     libraryDependencies ++= Seq(
       "org.mitre" % "jfairseq" % "1.0-SNAPSHOT" classifier osDetectorClassifier.value,
       "junit" % "junit" % "4.12" % Test,

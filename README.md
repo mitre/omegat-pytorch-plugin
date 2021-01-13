@@ -6,7 +6,7 @@ This repo serves to enable translators using OmegaT to add plugin support for To
 
 ## Build
 
-The plugin can be built using `sbt clean compile assembly`. Once this is done, the resulting artifact `./build/libs/omegat-pytorch-plugin-1.0-SNAPSHOT.jar` will need to be moved to the OmegaT plugins directory.
+The plugin can be built using `sbt clean assembly`. Once this is done, the resulting artifact `./target/omegat-torchscript-plugin-1.0-SNAPSHOT-XYZ.jar` will need to be moved to the OmegaT plugins directory where `XYZ` is the platform information of the target OmegaT installation.
 
 ## Running OmegaT with the plugin
 
