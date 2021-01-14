@@ -16,9 +16,9 @@ Because TorchScript support relies on native code a la libtorch, the OmegaT jar 
 % java -jar -Djava.library.path=$LIBTORCH_HOME /path/to/OmegaT.jar
 ```
 
-where `$LIBTORCH_HOME` is `/path/to/libtorch/`. Note: libtorch is platform-dependent, so be sure to download the appropriate libtorch for the operating system on which OmegaT will be running.
+where `$LIBTORCH_HOME` is `/path/to/libtorch/lib/`. Note: libtorch is platform-dependent, so be sure to download the appropriate libtorch for the operating system on which OmegaT will be running.
 
-In addition, because of differences in native library loading on Windows, the path will need to be updated to include `$LIBTORCH_HOME/lib/` so all native dependencies can be located by library loader. 
+In addition, because of differences in native library loading on Windows, the path will need to be updated to include `$LIBTORCH_HOME` so all native dependencies can be located by library loader. 
 
 Currently Windows support is only ensured for PyTorch 1.7.1 nightlies as of 2 December 2020 and above, though non-Windows support is guaranteed for 1.5+.
 
