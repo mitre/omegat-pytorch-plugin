@@ -97,10 +97,10 @@ public class FairseqMachineTranslation extends BaseTranslate implements IMachine
             dialog.getData(options);
         }
 
-        setCredential(OPTION_MODEL_FILE, options.getModelFile().toString(), false);
-        setCredential(OPTION_BPE_FILE, options.getBpeCodesFile().toString(), false);
-        setCredential(OPTION_SRC_DICT_FILE, options.getSourceDictFile().toString(), false);
-        setCredential(OPTION_TGT_DICT_FILE, options.getTargetDictFile().toString(), false);
+        Preferences.setPreference(OPTION_MODEL_FILE, options.getModelFile().toString());
+        Preferences.setPreference(OPTION_BPE_FILE, options.getBpeCodesFile().toString());
+        Preferences.setPreference(OPTION_SRC_DICT_FILE, options.getSourceDictFile().toString());
+        Preferences.setPreference(OPTION_TGT_DICT_FILE, options.getTargetDictFile().toString());
         Preferences.save();
 
         setup = CompletableFuture.supplyAsync(() -> {
@@ -109,10 +109,10 @@ public class FairseqMachineTranslation extends BaseTranslate implements IMachine
                 long t0 = System.currentTimeMillis();
                 try {
                     translator = FairseqTranslator.fromWhitespaceTokenizerSentencepiece(
-                            new File(getCredential(OPTION_SRC_DICT_FILE)),
-                            new File(getCredential(OPTION_TGT_DICT_FILE)),
-                            new File(getCredential(OPTION_MODEL_FILE)),
-                            new File(getCredential(OPTION_BPE_FILE))
+                            new File(Preferences.getPreference(OPTION_SRC_DICT_FILE)),
+                            new File(Preferences.getPreference(OPTION_TGT_DICT_FILE)),
+                            new File(Preferences.getPreference(OPTION_MODEL_FILE)),
+                            new File(Preferences.getPreference(OPTION_BPE_FILE))
                     );
                 } catch (IOException e) {
                     LOGGER.info(e.toString());
@@ -135,7 +135,6 @@ public class FairseqMachineTranslation extends BaseTranslate implements IMachine
 
     @Override
     protected String translate(Language sLang, Language tLang, String text) throws Exception {
-        LOGGER.info("Trying to translate '" + text + "'.");
         if (translator == null) {
             translator = setup.get();
         }
