@@ -14,6 +14,9 @@ jobs:
     runs-on: ${{ matrix.os }}
 
     steps:
+    - name: Configure git
+      run: "git config --global core.autocrlf false"
+      shell: bash
     - uses: actions/checkout@v1
     - name: set up JDK
       uses: actions/setup-java@v1
@@ -39,8 +42,10 @@ jobs:
     - name: Setup sentencepiece-jni
       run: cd sentencepiece-jni && mvn clean install
     - name: Setup jFairseq
+      shell: bash
       run: cd jfairseq && sbt clean compile package publishLocal
     - name: Build
+      shell: bash
       run: sbt -J-Xms1024m -J-Xmx1024m clean assembly
     - uses: actions/upload-artifact@v2
       with:
