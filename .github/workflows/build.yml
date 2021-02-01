@@ -36,14 +36,14 @@ jobs:
         path: ./sentencepiece-jni
     - name: Setup jFastBPE
       run: cd jfastbpe && gradle test build jar publishToMavenLocal
-    - name: Setup jFairseq
-      run: cd jfairseq && sbt clean compile package publishLocal
     - name: Setup sentencepiece-jni
       run: cd sentencepiece-jni && mvn clean install
+    - name: Setup jFairseq
+      run: cd jfairseq && sbt clean compile package publishLocal
     - name: Build
       run: sbt -J-Xms1024m -J-Xmx1024m clean assembly
     - uses: actions/upload-artifact@v2
       with:
-        name: omegat-torchscript-{{ matrix.os }}
+        name: omegat-torchscript ${{ matrix.os }}
         path: target/*.jar
       if: matrix.java == 'adopt@1.8'
