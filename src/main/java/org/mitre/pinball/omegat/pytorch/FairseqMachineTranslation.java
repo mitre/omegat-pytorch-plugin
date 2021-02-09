@@ -114,10 +114,10 @@ public class FairseqMachineTranslation extends BaseTranslate implements IMachine
                             new File(Preferences.getPreference(OPTION_MODEL_FILE)),
                             new File(Preferences.getPreference(OPTION_BPE_FILE))
                     );
+                    LOGGER.info("Finished constructing. Took " + (System.currentTimeMillis() - t0) / 1000 + " seconds.");
                 } catch (Exception e) {
                     LOGGER.info(e.toString());
                 }
-                LOGGER.info("Finish constructing. Took " + (System.currentTimeMillis() - t0) / 1000 + " seconds.");
                 return translator;
         });
 
