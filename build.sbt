@@ -25,8 +25,9 @@ lazy val root = (project in file("."))
     packageOptions in assembly := Seq(ManifestAttributes(("OmegaT-Plugins", "org.mitre.pinball.omegat.pytorch.FairseqMachineTranslation"))),
     libraryDependencies ++= Seq(
       "org.mitre" % "jfairseq" % "1.0-SNAPSHOT" classifier osDetectorClassifier.value,
+      "com.github.levyfan" %  "sentencepiece" %  "0.0.2" classifier osDetectorClassifier.value,
       "junit" % "junit" % "4.12" % Test,
-      "org.pytorch" % "pytorch_java_only" % "1.5.0",
+      "org.pytorch" % "pytorch_java_only" % "1.7.1",
       "org.mitre" % "jfastbpe" % "1.0-SNAPSHOT",
       "oauth.signpost" % "signpost-core" % "1.2.1.2",
       "oauth.signpost" % "signpost-commonshttp4" % "1.2.1.2",

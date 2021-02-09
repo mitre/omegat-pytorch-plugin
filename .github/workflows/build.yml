@@ -35,6 +35,7 @@ jobs:
         path: ./jfairseq
     - uses: actions/checkout@master
       with:
+        ref: v0.0.2
         repository: levyfan/sentencepiece-jni
         path: ./sentencepiece-jni
     - name: Setup jFastBPE
